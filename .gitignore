@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+.venv/
+.env
+
+# Full extracts are not committed - only the small sample in data/sample
+data/raw/
+data/processed/
+reports/*.csv
+reports/*.xlsx
+
+.ipynb_checkpoints/
+.vscode/
+.idea/
+.DS_Store
+*.pbix

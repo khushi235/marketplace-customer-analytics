@@ -1,0 +1,13 @@
+{
+  "total_net_revenue": 1254264.86,
+  "total_orders": 3217,
+  "total_customers": 900,
+  "aov": 389.89,
+  "repeat_rate_pct": 73.6,
+  "margin_pct": 32.5,
+  "revenue_concentration": {
+    "top_customer_pct": 20.0,
+    "customers": 180,
+    "revenue_share_pct": 67.7
+  }
+}

@@ -1,0 +1,84 @@
+// ============================================================================
+// DAX measures for the Marketplace Performance dashboard.
+// Every measure points back to the same curated tables, so a number on page 1
+// can never disagree with the same number on page 3.
+// ============================================================================
+
+Net Revenue =
+SUM ( stg_orders[net_revenue] )
+
+Gross Margin =
+SUM ( stg_orders[gross_margin] )
+
+Margin % =
+DIVIDE ( [Gross Margin], [Net Revenue] )
+
+Orders =
+DISTINCTCOUNT ( stg_orders[order_id] )
+
+Customers =
+DISTINCTCOUNT ( stg_orders[customer_id] )
+
+AOV =
+DIVIDE ( [Net Revenue], [Orders] )
+
+Revenue per Customer =
+DIVIDE ( [Net Revenue], [Customers] )
+
+Repeat Customers =
+CALCULATE (
+    DISTINCTCOUNT ( customer_metrics[customer_id] ),
+    customer_metrics[order_count] > 1
+)
+
+Repeat Rate % =
+DIVIDE ( [Repeat Customers], [Customers] )
+
+// --- Time intelligence -------------------------------------------------------
+
+Net Revenue LM =
+CALCULATE ( [Net Revenue], DATEADD ( 'Date'[Date], -1, MONTH ) )
+
+Revenue MoM % =
+DIVIDE ( [Net Revenue] - [Net Revenue LM], [Net Revenue LM] )
+
+Net Revenue LY =
+CALCULATE ( [Net Revenue], SAMEPERIODLASTYEAR ( 'Date'[Date] ) )
+
+Revenue YoY % =
+DIVIDE ( [Net Revenue] - [Net Revenue LY], [Net Revenue LY] )
+
+Revenue YTD =
+TOTALYTD ( [Net Revenue], 'Date'[Date] )
+
+// --- Segment measures --------------------------------------------------------
+
+Segment Revenue Share % =
+DIVIDE (
+    [Net Revenue],
+    CALCULATE ( [Net Revenue], ALL ( rfm_segments[segment] ) )
+)
+
+At Risk Revenue =
+CALCULATE ( [Net Revenue], rfm_segments[segment] = "At Risk" )
+
+Champions Share of Revenue % =
+DIVIDE (
+    CALCULATE ( [Net Revenue], rfm_segments[segment] = "Champions" ),
+    CALCULATE ( [Net Revenue], ALL ( rfm_segments[segment] ) )
+)
+
+// --- Cohort measures ---------------------------------------------------------
+
+Retention % =
+AVERAGE ( cohort_retention[retention_pct] )
+
+Cohort LTV =
+AVERAGE ( cohort_retention[revenue_per_cohort_customer] )
+
+// --- Formatting helper -------------------------------------------------------
+// Used for conditional formatting on the KPI cards: green above target, red below.
+
+Revenue vs Target Colour =
+VAR Target = SELECTEDVALUE ( targets[monthly_revenue_target] )
+RETURN IF ( [Net Revenue] >= Target, "#2E7D32", "#C62828" )
