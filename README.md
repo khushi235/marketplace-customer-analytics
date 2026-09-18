@@ -124,6 +124,6 @@ pytest -q
 
 ## Limitations I'd call out
 
-- Segmentation is behavioural only — no demographics, no product affinity yet.
+- Segmentation is behavioural only - no demographics, no product affinity yet.
 - Cohorts are built on signup month; a product-first cohort view would be a good next step.
 - Everything is batch (daily refresh). Nothing here is real time, and it doesn't need to be.
